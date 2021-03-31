@@ -15,9 +15,10 @@ def load_images(dir_path):
 
 def compute_disparity(imgL, imgR):
     window_size = 3
+    
     left_matcher = cv.StereoSGBM_create(
         minDisparity=0,
-        numDisparities=160,             
+        numDisparities=288,             
         blockSize=5,
         P1=8 * 3 * window_size ** 2,    
         P2=32 * 3 * window_size ** 2,
@@ -25,9 +26,10 @@ def compute_disparity(imgL, imgR):
         uniquenessRatio=15,
         speckleWindowSize=0,
         speckleRange=2,
-        preFilterCap=63,
+        preFilterCap=2,
         mode=cv.STEREO_SGBM_MODE_SGBM_3WAY
     )
+
     right_matcher = cv.ximgproc.createRightMatcher(left_matcher)
     print('Computing disparity...')
     displ = left_matcher.compute(imgL, imgR)
@@ -37,15 +39,15 @@ def compute_disparity(imgL, imgR):
     return displ, dispr, left_matcher
 
 def apply_filter(displ, imgL, dispr, left_matcher):
-    lmbda = 80000
-    sigma = 1.2
-    visual_multiplier = 1.0
+    lmbda = 160000
+    sigma = 1.8
 
     wls_filter = cv.ximgproc.createDisparityWLSFilter(matcher_left=left_matcher)
     wls_filter.setLambda(lmbda)
     wls_filter.setSigmaColor(sigma)
     print('Applying filter...')
     filteredImg = wls_filter.filter(displ, imgL, None, dispr)
+    # filteredImg = filteredImg/16
     filteredImg = cv.normalize(src=filteredImg, dst=filteredImg, beta=0, alpha=255, norm_type=cv.NORM_MINMAX)
     filteredImg = np.uint8(filteredImg)
     return filteredImg
