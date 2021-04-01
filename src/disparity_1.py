@@ -14,22 +14,29 @@ def load_images(dir_path):
     imgR = cv.imread(dir_path + 'im1.png')
     return imgL, imgR
 
-def preprocess_images(imgL, imgR):#calib_dict
-    imgL = cv.copyMakeBorder(imgL,0,0,288,0,cv.BORDER_CONSTANT)
-    imgR = cv.copyMakeBorder(imgR,0,0,288,0,cv.BORDER_CONSTANT)
+def preprocess_images(imgL, imgR, calib_dict):
+    pixel_offset = int(calib_dict['ndisp'])
+    pixel_offset = int(pixel_offset / 16) * 16
+    imgL = cv.copyMakeBorder(imgL,0,0,pixel_offset,0,cv.BORDER_CONSTANT)
+    imgR = cv.copyMakeBorder(imgR,0,0,pixel_offset,0,cv.BORDER_CONSTANT)
     return imgL, imgR
 
-def postprocess_disparity_map(filteredImg):#calib_dict
-    filteredImg = filteredImg[:,288:]
+def postprocess_disparity_map(filteredImg, calib_dict):
+    pixel_offset = int(calib_dict['ndisp'])
+    pixel_offset = int(pixel_offset / 16) * 16
+    filteredImg = filteredImg[:,pixel_offset:]
     return filteredImg
 
-def compute_disparity(imgL, imgR):#calib_dict
+def compute_disparity(imgL, imgR, calib_dict):
     """   """
+    num_disparities = int(calib_dict['ndisp'])
+    num_disparities = int(num_disparities / 16) * 16
+
     window_size = 3
     
     left_matcher = cv.StereoSGBM_create(
         minDisparity=0,
-        numDisparities=288,             
+        numDisparities=num_disparities,             
         blockSize=5,
         P1=8 * 3 * window_size ** 2,    
         P2=32 * 3 * window_size ** 2,
@@ -68,6 +75,7 @@ def apply_filter(displ, imgL, dispr, left_matcher):
     return filteredImg
 
 def load_calib_dict(dir_path):
+    """ """
     d = {}
     with open(dir_path + "calib.txt") as f:
         for line in f:
@@ -76,6 +84,7 @@ def load_calib_dict(dir_path):
     return d
 
 def compare_ground_truth(disparity_map, folder):
+    """ """
     print('Comparing to ground truth')
     ground_truth = cv.imread(f'{folder}disp0.pfm',-1)
 
@@ -87,10 +96,15 @@ def compare_ground_truth(disparity_map, folder):
     bad2 = np.count_nonzero(diff > 2) / total_pixels
     return bad2
 
-def make_depth_map(disparity_map, folder):#calib_dict
+def make_depth_map(disparity_map, folder, calib_dict):
+    """Z = baseline * f / (d + doffs)"""
     print('Computing depth map')
-    depth_map = disparity_map + 100.279
-    depth_map = 193.006 * 2329.558 / depth_map
+    doffs = float(calib_dict['doffs'])
+    baseline = float(calib_dict['baseline'])
+    f = float(calib_dict['cam0'].split(' ')[0].replace('[',""))
+
+    depth_map = disparity_map + doffs
+    depth_map = baseline * f / depth_map
 
     fig, ax = plt.subplots(figsize=(20, 10))
     fig.axes[0].get_xaxis().set_visible(False)
@@ -114,35 +128,21 @@ def main():
         calib_dict = load_calib_dict(folder)
         
         imgL, imgR = load_images(folder)
-        imgL, imgR = preprocess_images(imgL, imgR)
+        imgL, imgR = preprocess_images(imgL, imgR, calib_dict)
 
-        displ, dispr, left_matcher = compute_disparity(imgL, imgR)
+        displ, dispr, left_matcher = compute_disparity(imgL, imgR, calib_dict)
         disparity_map = apply_filter(displ, imgL, dispr, left_matcher)
-        disparity_map = postprocess_disparity_map(disparity_map)
+        disparity_map = postprocess_disparity_map(disparity_map, calib_dict)
 
         cv.imwrite(folder +"disparidade.pgm",disparity_map)
         print("File disparidade.pgm saved on current folder")
 
         bad2 = compare_ground_truth(disparity_map, folder)
-        print(f'bad 2.0 for image {folder}: {round(bad2,2)}')
+        print(f'bad 2.0 for image pair {folder}: {round(bad2,2)}')
 
-        make_depth_map(disparity_map, folder)
-        # Z = baseline * f / (d + doffs)
+        make_depth_map(disparity_map, folder, calib_dict)
+        
 
-
-    # # Window name in which image is displayed
-    # window_name = 'image'
-    
-    # # Using cv2.imshow() method 
-    # # Displaying the image 
-    # cv.imshow(window_name, disparity_map)
-    
-    # #waits for user to press any key 
-    # #(this is necessary to avoid Python kernel form crashing)
-    # cv.waitKey(0) 
-    
-    # #closing all open windows 
-    # cv.destroyAllWindows() 
 
 
 
