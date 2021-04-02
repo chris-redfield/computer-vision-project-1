@@ -8,6 +8,10 @@ import glob
 DATA_DIR = '../data/'
 MIDDLEBURY_DIR = DATA_DIR + "Middlebury/"
 
+def relu(m):
+    """ rectified linear unit """
+    m[m < 0] = 0
+
 def load_images(dir_path):
     """ """
     imgL = cv.imread(dir_path + 'im0.png')
@@ -25,6 +29,9 @@ def postprocess_disparity_map(filteredImg, calib_dict):
     pixel_offset = int(calib_dict['ndisp'])
     pixel_offset = int(pixel_offset / 16) * 16
     filteredImg = filteredImg[:,pixel_offset:]
+    
+    ### adds relu to handle negative values
+    relu(filteredImg)
     return filteredImg
 
 def compute_disparity(imgL, imgR, calib_dict):
@@ -57,10 +64,21 @@ def compute_disparity(imgL, imgR, calib_dict):
     
     return displ, dispr, left_matcher
 
-def apply_filter(displ, imgL, dispr, left_matcher):
+def apply_filter(displ, imgL, dispr, left_matcher, calib_dict):
     """  """
-    lmbda = 160000
-    sigma = 1.8
+    doffs = float(calib_dict['doffs'])
+    f = float(calib_dict['cam0'].split(' ')[0].replace('[',""))
+    x = f * doffs
+    
+    print(f'doffs: {doffs}, f: {f}')
+
+    #inverses X, so that large numbers became small
+    x = x ** -1
+    x = int(x * 10000000)
+    lmbda = x * 4000
+    print(f'lambda: {lmbda}')
+    #lmbda = 160000
+    sigma = 1.2
 
     wls_filter = cv.ximgproc.createDisparityWLSFilter(matcher_left=left_matcher)
     wls_filter.setLambda(lmbda)
@@ -131,7 +149,10 @@ def main():
         imgL, imgR = preprocess_images(imgL, imgR, calib_dict)
 
         displ, dispr, left_matcher = compute_disparity(imgL, imgR, calib_dict)
-        disparity_map = apply_filter(displ, imgL, dispr, left_matcher)
+        cv.imwrite(folder +"displ_TESTE.png",displ)
+
+
+        disparity_map = apply_filter(displ, imgL, dispr, left_matcher, calib_dict)
         disparity_map = postprocess_disparity_map(disparity_map, calib_dict)
 
         cv.imwrite(folder +"disparidade.pgm",disparity_map)
