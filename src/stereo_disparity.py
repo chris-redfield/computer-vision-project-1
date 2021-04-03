@@ -21,6 +21,7 @@ def load_images(dir_path):
     return imgL, imgR
 
 def preprocess_images(imgL, imgR, calib_dict):
+    """ """
     pixel_offset = int(calib_dict['ndisp'])
     pixel_offset = int(pixel_offset / 16) * 16
     imgL = cv.copyMakeBorder(imgL,0,0,pixel_offset,0,cv.BORDER_CONSTANT)
@@ -28,6 +29,7 @@ def preprocess_images(imgL, imgR, calib_dict):
     return imgL, imgR
 
 def postprocess_disparity_map(filteredImg, calib_dict):
+    """ """
     pixel_offset = int(calib_dict['ndisp'])
     pixel_offset = int(pixel_offset / 16) * 16
     filteredImg = filteredImg[:,pixel_offset:]
