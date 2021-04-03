@@ -4,9 +4,11 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import normalize
 import glob
+import os
 
-DATA_DIR = '../data/'
-MIDDLEBURY_DIR = DATA_DIR + "Middlebury/"
+#DATA_DIR = '../data/'
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'data/'))
+MIDDLEBURY_DIR = DATA_DIR + "/Middlebury/"
 
 def relu(m):
     """ rectified linear unit """
