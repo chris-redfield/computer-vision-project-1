@@ -8,29 +8,42 @@ points_pair_left = []
 points_pair_right = []
 
 def draw_line_img1(event,x,y,flags,param):
-    global points_pair_left
+    global points_pair_left, points_pair_right
 
     if event == cv.EVENT_LBUTTONDBLCLK:
         cv.circle(img1,(x,y),5,(255,0,0),-1)
         points_pair_left.append([x,y])
+        
         if(len(points_pair_left)>1):
             print("Img1:", points_pair_left)
             cv.line(img1, (points_pair_left[0][0],points_pair_left[0][1]),
-             (points_pair_left[1][0],points_pair_left[1][1]), (255,0,0), 5)
-            points_pair_left=[]
+                (points_pair_left[1][0],points_pair_left[1][1]), (255,0,0), 5)
+
+            if(len(points_pair_right)>1):
+                triangulate_points(points_pair_left, points_pair_right)
+                points_pair_left, points_pair_right=[],[]
 
 def draw_line_img2(event,x,y,flags,param):
-    global points_pair_right
+    global points_pair_left, points_pair_right
 
     if event == cv.EVENT_LBUTTONDBLCLK:
         cv.circle(img2,(x,y),5,(255,0,0),-1)
         points_pair_right.append([x,y])
+        
         if(len(points_pair_right)>1):
             print("Img2:", points_pair_right)
             cv.line(img2, (points_pair_right[0][0],points_pair_right[0][1]),
              (points_pair_right[1][0],points_pair_right[1][1]), (255,0,0), 5)
-            points_pair_right=[]
 
+            if(len(points_pair_left)>1):
+                triangulate_points(points_pair_left, points_pair_right)
+                points_pair_left, points_pair_right=[],[]
+
+def triangulate_points(point_pair_left, point_pair_right):
+
+    
+
+    print(point_pair_left, point_pair_right)
 
 
 def main():
