@@ -8,6 +8,18 @@ FURUKAWA_DIR = DATA_DIR + "/FurukawaPonce/"
 points_pair_left = []
 points_pair_right = []
 
+def process_distance(points_pair_left,points_pair_right):
+    distance = triangulate_points(points_pair_left, points_pair_right)
+    distance = round(distance,2)
+
+    mean_x_left = int( (points_pair_left[0][0] + points_pair_left[1][0]) / 2 )
+    mean_y_left = int( (points_pair_left[0][1] + points_pair_left[1][1]) / 2 )
+    mean_x_right = int( (points_pair_right[0][0] + points_pair_right[1][0]) / 2 )
+    mean_y_right = int( (points_pair_right[0][1] + points_pair_right[1][1]) / 2 )
+
+    cv.putText(img1, str(distance),(mean_x_left,mean_y_left),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
+    cv.putText(img2, str(distance),(mean_x_right,mean_y_right),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
+
 def draw_line_img1(event,x,y,flags,param):
     global points_pair_left, points_pair_right
 
@@ -21,14 +33,7 @@ def draw_line_img1(event,x,y,flags,param):
                 (points_pair_left[1][0],points_pair_left[1][1]), (255,0,0), 5)
 
             if(len(points_pair_right)>1):
-                distance = triangulate_points(points_pair_left, points_pair_right)
-                distance = round(distance,2)
-
-                mean_x_left = int( (points_pair_left[0][0] + points_pair_left[1][0]) / 2 )
-                mean_y_left = int( (points_pair_left[0][1] + points_pair_left[1][1]) / 2 )
-
-                cv.putText(img1, str(distance),(mean_x_left,mean_y_left),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
-
+                process_distance(points_pair_left,points_pair_right)
                 points_pair_left, points_pair_right=[],[]
 
 def draw_line_img2(event,x,y,flags,param):
@@ -44,13 +49,7 @@ def draw_line_img2(event,x,y,flags,param):
              (points_pair_right[1][0],points_pair_right[1][1]), (255,0,0), 5)
 
             if(len(points_pair_left)>1):
-                distance = triangulate_points(points_pair_left, points_pair_right)
-                distance = round(distance,2)
-
-                mean_x_right = int( (points_pair_right[0][0] + points_pair_right[1][0]) / 2 )
-                mean_y_right = int( (points_pair_right[0][1] + points_pair_right[1][1]) / 2 )
-                
-                cv.putText(img2, str(distance),(mean_x_right,mean_y_right),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
+                process_distance(points_pair_left,points_pair_right)                
                 points_pair_left, points_pair_right=[],[]
 
 def triangulate_points(point_pair_left, point_pair_right):
@@ -88,9 +87,6 @@ def triangulate_points(point_pair_left, point_pair_right):
     return euclidean_dist_3d
 
 
-    
-
-
 def main():
     
     global img1, img2
@@ -98,8 +94,8 @@ def main():
     cv.namedWindow("img1", cv.WINDOW_NORMAL)
     cv.namedWindow("img2", cv.WINDOW_NORMAL)
 
-    img1 = cv.imread(FURUKAWA_DIR + 'MorpheusL.jpg') #queryimage # left image
-    img2 = cv.imread(FURUKAWA_DIR + 'MorpheusR.jpg') #trainimage # right image
+    img1 = cv.imread(FURUKAWA_DIR + 'MorpheusL.jpg')
+    img2 = cv.imread(FURUKAWA_DIR + 'MorpheusR.jpg')
     
     cv.setMouseCallback('img1',draw_line_img1)
     cv.setMouseCallback('img2',draw_line_img2)
