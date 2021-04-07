@@ -10,6 +10,9 @@ points_pair_right = []
 
 def process_distance(points_pair_left,points_pair_right):
     distance = triangulate_points(points_pair_left, points_pair_right)
+    
+    #divides by 30mm, according to original dataset docs
+    distance = distance / 30
     distance = round(distance,2)
 
     mean_x_left = int( (points_pair_left[0][0] + points_pair_left[1][0]) / 2 )
