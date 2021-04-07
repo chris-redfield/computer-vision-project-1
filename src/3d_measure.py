@@ -14,14 +14,15 @@ def process_distance(points_pair_left,points_pair_right):
     #divides by 30mm, according to original dataset docs
     distance = distance / 30
     distance = round(distance,2)
+    print("Euclidean distance between the points:", str(distance) + "cm" )
 
     mean_x_left = int( (points_pair_left[0][0] + points_pair_left[1][0]) / 2 )
     mean_y_left = int( (points_pair_left[0][1] + points_pair_left[1][1]) / 2 )
     mean_x_right = int( (points_pair_right[0][0] + points_pair_right[1][0]) / 2 )
     mean_y_right = int( (points_pair_right[0][1] + points_pair_right[1][1]) / 2 )
 
-    cv.putText(img1, str(distance),(mean_x_left,mean_y_left),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
-    cv.putText(img2, str(distance),(mean_x_right,mean_y_right),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
+    cv.putText(img1, str(distance)+"cm",(mean_x_left,mean_y_left),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
+    cv.putText(img2, str(distance)+"cm",(mean_x_right,mean_y_right),cv.FONT_HERSHEY_SIMPLEX,1.5, (0,0,0),3)
 
 def draw_line_img1(event,x,y,flags,param):
     global points_pair_left, points_pair_right
@@ -86,7 +87,6 @@ def triangulate_points(point_pair_left, point_pair_right):
     #print(point_3D_start,point_3D_end)
 
     euclidean_dist_3d = np.linalg.norm(point_3D_start - point_3D_end)
-    print("Euclidean distance between the points:", euclidean_dist_3d)
     return euclidean_dist_3d
 
 
