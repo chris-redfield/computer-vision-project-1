@@ -117,4 +117,4 @@ Double click 2 points on the left image, a line will form between them. Then sel
 Repeat the process for having a good idea about the object size.
 
 ### results
-![](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_3D_measure2.png?token=AALYMPCGXZGPACAHD5PZMEDAN4VYW)
+![3D Measures](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_3D_measure2.png)
