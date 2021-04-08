@@ -61,10 +61,10 @@ stereomatching and filtering parameters are set dinamically, based on distance o
 
 Example results:
 - Disparity map:
-![Disparity Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/disparity_playtable_SGBM_post_filtered.png?token=AALYMPE56CMAS5XZAH3KRY3AN4R32)
+![Disparity Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/disparity_playtable_SGBM_post_filtered.png)
 
 - Depth map:
-![Depth Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/disparity_playtable_SGBM_post_filtered_colormap.png?token=AALYMPEEVPKLVXCWMN4KHKTAN4SB4)
+![Depth Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/disparity_playtable_SGBM_post_filtered_colormap.png)
 
 ## 2. Disparity and depth map estimation from converged stereo cameras
 
@@ -94,10 +94,12 @@ depth map saved at /home/user/proj/computer-vision-project-1/data/FurukawaPonce/
  - profundidade.png: The depth map computed from the disparity map, with a colormap representing the distance in mm
 
 Example results
-- Point matching after rectification::
+- Point matching after rectification:
+
 ![Point matching after rectification](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_rectified_matching_points.png?token=AALYMPERNZDKQ64WGOXPBXDAN4UKU)
 
 - Depth map:
+
 ![Depth Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_depth_map.png?token=AALYMPEOAR26GPLYEFKGJPTAN4UO6)
 
 ## 3. 3D objects measurements from stereo cameras
