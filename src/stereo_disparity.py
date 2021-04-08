@@ -153,7 +153,7 @@ def main():
         imgL, imgR = preprocess_images(imgL, imgR, calib_dict)
 
         displ, dispr, left_matcher = compute_disparity(imgL, imgR, calib_dict)
-        cv.imwrite(folder +"displ_TESTE.png",displ)
+        #cv.imwrite(folder +"displ_TESTE.png",displ)
 
 
         disparity_map = apply_filter(displ, imgL, dispr, left_matcher, calib_dict)
