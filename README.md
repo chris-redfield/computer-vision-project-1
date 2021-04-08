@@ -59,7 +59,7 @@ depth map saved at /home/user/proj/computer-vision-project-1/data/Middlebury/Jad
 
 stereomatching and filtering parameters are set dinamically, based on distance offset and focal length.
 
-Example results:
+### Results:
 - Disparity map:
 ![Disparity Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/disparity_playtable_SGBM_post_filtered.png)
 
@@ -93,14 +93,28 @@ depth map saved at /home/user/proj/computer-vision-project-1/data/FurukawaPonce/
  - disparidade.pgm: The disparity map saved in pixels
  - profundidade.png: The depth map computed from the disparity map, with a colormap representing the distance in mm
 
-Example results
+### results
 - Point matching after rectification:
 
-![Point matching after rectification](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_rectified_matching_points.png?token=AALYMPERNZDKQ64WGOXPBXDAN4UKU)
+![Point matching after rectification](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_rectified_matching_points.png)
 
 - Depth map:
 
-![Depth Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_depth_map.png?token=AALYMPEOAR26GPLYEFKGJPTAN4UO6)
+![Depth Map](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_depth_map.png)
 
 ## 3. 3D objects measurements from stereo cameras
 
+Place the Morpheus image pair from Yasutaka Furukawa and Jean Ponce dataset in data/FurukawaPonce/, along with the cameras calibration parameters and run:
+
+```console
+python src/3d_measure.py
+```
+
+2 windows will open, the left image (img1) one and the right image (img2).
+
+Double click 2 points on the left image, a line will form between them. Then select the same 2 points on the right image. A new line will show on the right image, and then the line measure will appear in cm.
+
+Repeat the process for having a good idea about the object size.
+
+### results
+![](https://raw.githubusercontent.com/chris-redfield/computer-vision-project-1/main/relatorio/morpheus_3D_measure2.png?token=AALYMPCGXZGPACAHD5PZMEDAN4VYW)
