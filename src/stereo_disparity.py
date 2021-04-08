@@ -74,13 +74,13 @@ def apply_filter(displ, imgL, dispr, left_matcher, calib_dict):
     f = float(calib_dict['cam0'].split(' ')[0].replace('[',""))
     x = f * doffs
     
-    print(f'doffs: {doffs}, f: {f}')
+    #print(f'doffs: {doffs}, f: {f}')
 
     #inverses X, so that large numbers became small
     x = x ** -1
     x = int(x * 10000000)
     lmbda = x * 4000
-    print(f'lambda: {lmbda}')
+    #print(f'lambda: {lmbda}')
     #lmbda = 160000
     sigma = 1.2
 
