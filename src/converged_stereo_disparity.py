@@ -59,7 +59,8 @@ def process_point_matching(img1, img2):
 
     pts1 = []
     pts2 = []
-    # contrast threshold test as Lowe's paper
+    
+    # ratio of closest-distance to second-closest distance as Lowe's paper
     for i,(m,n) in enumerate(matches):
         if m.distance < 0.8*n.distance:
             pts2.append(kp2[m.trainIdx].pt)
