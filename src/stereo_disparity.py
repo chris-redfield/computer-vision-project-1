@@ -91,7 +91,7 @@ def apply_filter(displ, imgL, dispr, left_matcher, calib_dict):
     print('Applying filter...')
     filteredImg = wls_filter.filter(displ, imgL, None, dispr)
     
-    filteredImg = filteredImg/16
+    filteredImg = filteredImg/10
     # filteredImg = cv.normalize(src=filteredImg, dst=filteredImg, beta=0, alpha=255, norm_type=cv.NORM_MINMAX)
     # filteredImg = np.uint8(filteredImg)
     return filteredImg
@@ -162,8 +162,10 @@ def main():
         cv.imwrite(folder +"disparidade.pgm",disparity_map)
         print("File disparidade.pgm saved on current folder")
 
-        bad2 = compare_ground_truth(disparity_map, folder)
-        print(f'bad 2.0 for image pair {folder}: {round(bad2,2)}')
+        ## Local taken picture doesn't have ground truth
+        if "Chris-undistorted" not in folder:
+            bad2 = compare_ground_truth(disparity_map, folder)
+            print(f'bad 2.0 for image pair {folder}: {round(bad2,2)}')
 
         make_depth_map(disparity_map, folder, calib_dict)
         
